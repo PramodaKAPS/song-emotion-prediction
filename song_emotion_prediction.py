@@ -18,6 +18,9 @@ import os  # Added for directory creation
 import tensorflow as tf  # Added for neural network with epochs
 from sklearn.metrics import r2_score, f1_score  # Added for R² and F1
 
+# Suppress TensorFlow warnings
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 # For headless plotting on server
 import matplotlib
 matplotlib.use('Agg')
@@ -65,11 +68,11 @@ if not xanew_df.empty:
 sentence_df = download_csv(EMOBANK_URL)
 song_df = download_csv(SPOTIFY_URL)
 
-# Subset for testing (first 2000 rows for training) - comment out for full datasets
+# Subset for testing (first 5000 rows for training and predictions)
 if not sentence_df.empty:
-    sentence_df = sentence_df[sentence_df['split'] == 'train'].iloc[0:2000]  # First 2000 rows
+    sentence_df = sentence_df[sentence_df['split'] == 'train'].iloc[0:5000]  # First 5000 rows for training
 if not song_df.empty:
-    song_df = song_df.head(50)
+    song_df = song_df.head(5000)  # First 5000 rows for predictions (updated as requested)
 
 # Normalize EmoBank arousal/valence
 if not sentence_df.empty:
@@ -234,10 +237,11 @@ if not sentence_df.empty and sentence_embeddings.size > 0:
     y_arousal = sentence_df['A'].values
     y_valence = sentence_df['V'].values
 
-    # Define simple MLP regressor model
+    # Define simple MLP regressor model (updated with Input layer)
     def create_mlp_regressor(input_dim):
         model = tf.keras.Sequential([
-            tf.keras.layers.Dense(128, activation='relu', input_dim=input_dim),
+            tf.keras.layers.Input(shape=(input_dim,)),
+            tf.keras.layers.Dense(128, activation='relu'),
             tf.keras.layers.Dense(64, activation='relu'),
             tf.keras.layers.Dense(1)  # Regression output
         ])
