@@ -9,9 +9,7 @@ def preprocess_text(text):
 def get_xanew_features(tokens, xanew_df, is_lyric=False):
     if xanew_df.empty:
         return 0.5, 0.5
-    arousal_scores = []
-    valence_scores = []
-    weights = []
+    arousal_scores, valence_scores, weights = [], [], []
     for token in set(tokens):
         if token in xanew_df['word'].values:
             row = xanew_df[xanew_df['word'] == token]
@@ -33,16 +31,13 @@ def apply_pos_context(tokens, arousal, valence):
     negation_count = sum(1 for word, _ in tagged if word in negation_words)
     verb_neg_count = sum(1 for word, tag in tagged if tag.startswith('VB') and word in ['kill', 'destroy'])
 
-    # Apply adjustments once
     arousal *= (1.2 ** (adj_count / max(len(tokens), 1))) * (1.1 ** (adv_count / max(len(tokens), 1)))
     valence *= (1.2 ** (adj_count / max(len(tokens), 1))) * (1.1 ** (adv_count / max(len(tokens), 1)))
     valence *= (0.8 ** verb_neg_count)
 
-    # Flip valence if odd negations
     if negation_count % 2 == 1:
         valence = 1.0 - valence
 
-    # Clamp to [0, 1]
     arousal = min(max(arousal, 0.0), 1.0)
     valence = min(max(valence, 0.0), 1.0)
     return arousal, valence
