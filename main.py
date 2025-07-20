@@ -14,13 +14,13 @@ from io import StringIO
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import pearsonr
-from google.colab import drive
+# from google.colab import drive  # Comment out or remove this import if not needed
 import os  # Added for directory creation
 import tensorflow as tf  # Added for neural network with epochs
 from sklearn.metrics import r2_score, f1_score  # Added for R² and F1
 
-# Mount Google Drive
-drive.mount('/content/drive')
+# Mount Google Drive - REMOVE THIS LINE, handle mounting separately in Colab
+# drive.mount('/content/drive')
 
 # Download NLTK resources
 nltk.download('punkt', quiet=True)
@@ -33,6 +33,7 @@ nltk.download('averaged_perceptron_tagger_eng', quiet=True)
 # Create Drive folder if it doesn't exist (moved earlier)
 drive_folder = '/content/drive/MyDrive/SongEmotionPredictions/'
 os.makedirs(drive_folder, exist_ok=True)
+
 
 # URLs
 XANEW_URL = 'https://raw.githubusercontent.com/JULIELab/XANEW/master/Ratings_Warriner_et_al.csv'
