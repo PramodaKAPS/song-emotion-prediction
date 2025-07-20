@@ -4,10 +4,11 @@ from setup import setup_environment
 from data_loader import download_csv  # Assuming data_loader.py has load_datasets function; adjust if needed
 from preprocess import preprocess_text, get_xanew_features, apply_pos_context
 from features import get_bert_embeddings
-from model import train_and_evaluate
+from model import train_nn_models, compute_metrics
 from utils import calculate_audio_scores, combine_predictions, assign_quadrant, create_thayer_plot, add_spotify_columns_to_final_csv
-import numpy as pd
-from transformers import AutoTokenizer, AutoModel  # Added missing imports for DistilBERT
+import numpy as np
+import pandas as pd
+from transformers import AutoTokenizer, AutoModel  # Added import for AutoTokenizer and AutoModel
 
 def main():
     drive_folder = setup_environment()
@@ -19,6 +20,8 @@ def main():
     xanew_df = download_csv(XANEW_URL)
     sentence_df = download_csv(EMOBANK_URL)
     song_df = download_csv(SPOTIFY_URL)
+    
+    # ... (rest of your code remains unchanged)
     
     # Preprocess and extract features for EmoBank
     sentence_df['tokens'], sentence_df['cleaned_text'] = zip(*sentence_df['text'].apply(preprocess_text))
