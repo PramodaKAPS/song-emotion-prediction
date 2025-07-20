@@ -318,8 +318,8 @@ if not song_df.empty:
         'arousal_final': arousal_final,
         'valence_final': valence_final
     })
-    predictions_df.to_csv(drive_folder + 'song_emotion_predictions_taylor_francis.csv', index=False)
-    print("Predictions saved locally: " + drive_folder + 'song_emotion_predictions_taylor_francis.csv')
+    predictions_df.to_csv(drive_folder + 'song_emotion_predictions_taylor_francis1000.csv', index=False)
+    print("Predictions saved locally: " + drive_folder + 'song_emotion_predictions_taylor_francis1000.csv')
 
 # Validation
 if not song_df.empty and not valence_audio.empty:
@@ -331,7 +331,7 @@ if not arousal_audio.empty and not arousal_text.empty:
     print(f"Arousal correlation (audio vs. text): {corr:.4f}")
 
 # Thayer's Plot (adjusted for [-1,1] scale)
-def create_thayer_plot(predictions_df, output_file=drive_folder + 'thayer_plot_taylor_francis.png'):
+def create_thayer_plot(predictions_df, output_file=drive_folder + 'thayer_plot_taylor_francis1000.png'):
     if predictions_df.empty:
         print("No data for plot.")
         return
@@ -375,8 +375,8 @@ def assign_quadrant(arousal, valence):
 if 'predictions_df' in locals() and not predictions_df.empty:
     predictions_df['quadrant'] = predictions_df.apply(
         lambda row: assign_quadrant(row['arousal_final'], row['valence_final']), axis=1)
-    predictions_df.to_csv(drive_folder + 'song_emotion_predictions_with_quadrant_taylor_francis.csv', index=False)
-    print("Predictions with quadrant labels saved locally: " + drive_folder + 'song_emotion_predictions_with_quadrant_taylor_francis.csv')
+    predictions_df.to_csv(drive_folder + 'song_emotion_predictions_with_quadrant_taylor_francis1000.csv', index=False)
+    print("Predictions with quadrant labels saved locally: " + drive_folder + 'song_emotion_predictions_with_quadrant_taylor_francis1000.csv')
 
 # Function to add Spotify columns to final output CSV (as requested)
 def add_spotify_columns_to_final_csv(song_df, predictions_df, drive_folder):
@@ -389,7 +389,7 @@ def add_spotify_columns_to_final_csv(song_df, predictions_df, drive_folder):
     final_df = final_df.join(predictions_df.set_index(['track_id', 'track_name', 'track_artist']), on=['track_id', 'track_name', 'track_artist'])
 
     # Save the final enriched DataFrame
-    final_output_file = drive_folder + 'spotify_full_with_predictions.csv'
+    final_output_file = drive_folder + 'spotify_full_with_predictions1000.csv'
     final_df.to_csv(final_output_file, index=False)
     print(f"Final output CSV with all Spotify columns and predictions saved locally: {final_output_file}")
 
