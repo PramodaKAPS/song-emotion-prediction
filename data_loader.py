@@ -7,23 +7,19 @@ def download_csv(url):
         print(f"Error downloading {url}: {e}")
         return pd.DataFrame()
 
-def load_datasets():
-    XANEW_URL = 'https://raw.githubusercontent.com/JULIELab/XANEW/master/Ratings_Warriner_et_al.csv'
-    EMOBANK_URL = 'https://raw.githubusercontent.com/PramodaKAPS/SongsEmotions/main/emobank.csv'
-    SPOTIFY_URL = 'https://raw.githubusercontent.com/PramodaKAPS/SongsEmotions/main/spotify_songs.csv'
-    
-    xanew_df = download_csv(XANEW_URL)
+def load_datasets(limit=1000):
+    xanew_df = download_csv('https://raw.githubusercontent.com/JULIELab/XANEW/master/Ratings_Warriner_et_al.csv')
     if not xanew_df.empty:
         xanew_df = xanew_df[['Word', 'V.Mean.Sum', 'A.Mean.Sum']].rename(columns={'Word': 'word', 'V.Mean.Sum': 'valence', 'A.Mean.Sum': 'arousal'})
         xanew_df[['valence', 'arousal']] = MinMaxScaler().fit_transform(xanew_df[['valence', 'arousal']])
     
-    sentence_df = download_csv(EMOBANK_URL)
-    song_df = download_csv(SPOTIFY_URL)
+    sentence_df = download_csv('https://raw.githubusercontent.com/PramodaKAPS/SongsEmotions/main/emobank.csv')
+    song_df = download_csv('https://raw.githubusercontent.com/PramodaKAPS/SongsEmotions/main/spotify_songs.csv')
     
-    # Subset for testing (first 50 rows) - comment out for full datasets
     if not sentence_df.empty:
-        sentence_df = sentence_df[sentence_df['split'] == 'train'].head(50)
+        sentence_df = sentence_df[sentence_df['split'] == 'train'].head(limit)
     if not song_df.empty:
-        song_df = song_df.head(50)
+        song_df = song_df.head(limit)
     
     return xanew_df, sentence_df, song_df
+
