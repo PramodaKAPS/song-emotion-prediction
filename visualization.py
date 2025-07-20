@@ -24,3 +24,4 @@ def create_thayer_plot(predictions_df, output_file):
     plt.ylim(-1, 1)
     plt.savefig(output_file, dpi=300, bbox_inches='tight')
     print(f"Thayer's plot saved to: {output_file}")
+
