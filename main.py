@@ -1,5 +1,9 @@
-
 # main.py: Main script to run the full pipeline
+
+from google.colab import drive  # Added for Drive mount
+from transformers import AutoTokenizer, AutoModel  # Added for model loading
+import warnings  # Added to suppress warnings
+warnings.filterwarnings('ignore')  # Suppress non-critical warnings
 
 from setup import setup_environment
 from data_loader import download_csv  # Assuming data_loader.py has load_datasets function; adjust if needed
@@ -83,8 +87,10 @@ def main():
         'arousal_final': arousal_final,
         'valence_final': valence_final
     })
+    predictions_df.to_csv(drive_folder + 'song_emotion_predictions_taylor_francis.csv', index=False)
+    print("Predictions saved to Google Drive: " + drive_folder + 'song_emotion_predictions_taylor_francis.csv')
     
-    # Validation (unchanged)
+    # Validation
     if not song_df.empty and not valence_audio.empty:
         mse_valence = mean_squared_error(song_df['valence'], valence_audio)
         print(f"Valence MSE (linear audio vs. Spotify valence): {mse_valence:.4f}")
@@ -105,5 +111,7 @@ def main():
     add_spotify_columns_to_final_csv(song_df, predictions_df, drive_folder)
 
 if __name__ == '__main__':
-    main()  # Indented correctly
+    main()
+
+
 
