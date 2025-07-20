@@ -30,10 +30,6 @@ def main():
     y_arousal, y_valence = sentence_df['A'].values, sentence_df['V'].values
     arousal_model, valence_model, arousal_mse, arousal_r2, valence_mse, valence_r2, f1 = train_and_evaluate(X_train, y_arousal, y_valence, epochs=10)
     
-    # Compute training metrics
-    y_arousal_pred = arousal_model.predict(X_train).flatten()
-    y_valence_pred = valence_model.predict(X_train).flatten()
-    
     # Print metrics
     print(f"Training Metrics:\nArousal MSE: {arousal_mse:.4f}, R²: {arousal_r2:.4f}\nValence MSE: {valence_mse:.4f}, R²: {valence_r2:.4f}\nF1 Score (Quadrant): {f1:.4f}")
     
@@ -86,10 +82,8 @@ def main():
         'arousal_final': arousal_final,
         'valence_final': valence_final
     })
-    predictions_df.to_csv(drive_folder + 'song_emotion_predictions_taylor_francis.csv', index=False)
-    print("Predictions saved to Google Drive: " + drive_folder + 'song_emotion_predictions_taylor_francis.csv')
     
-    # Validation
+    # Validation (unchanged)
     if not song_df.empty and not valence_audio.empty:
         mse_valence = mean_squared_error(song_df['valence'], valence_audio)
         print(f"Valence MSE (linear audio vs. Spotify valence): {mse_valence:.4f}")
@@ -109,6 +103,6 @@ def main():
     # Merge and save final CSV with all Spotify columns
     add_spotify_columns_to_final_csv(song_df, predictions_df, drive_folder)
 
-if name == 'main':
-main()
+if __name__ == '__main__':
+    main()  # Indented correctly
 
