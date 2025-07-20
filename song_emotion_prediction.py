@@ -25,8 +25,8 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import matplotlib
 matplotlib.use('Agg')
 
-# Create local folder if it doesn't exist
-drive_folder = './SongEmotionPredictions/'
+# Create new local folder for this run
+drive_folder = './SongEmotionPredictions_Second10000/'  # New folder as requested
 os.makedirs(drive_folder, exist_ok=True)
 
 # Download NLTK resources
@@ -68,11 +68,11 @@ if not xanew_df.empty:
 sentence_df = download_csv(EMOBANK_URL)
 song_df = download_csv(SPOTIFY_URL)
 
-# Subset for testing (first 5000 rows for training; second 10000 rows for Spotify predictions)
+# Subset for testing (first 5000 rows for training on Emobank; second 10000 rows for predictions on Spotify)
 if not sentence_df.empty:
     sentence_df = sentence_df[sentence_df['split'] == 'train'].iloc[0:5000]  # First 5000 rows for training
 if not song_df.empty:
-    song_df = song_df.iloc[5000:15000]  # Second 10000 rows for predictions (indices 5000 to 14999)
+    song_df = song_df.iloc[5000:15000]  # Second 10000 rows (rows 5000 to 14999) for predictions (updated as requested)
 
 # Normalize EmoBank arousal/valence
 if not sentence_df.empty:
@@ -396,4 +396,3 @@ def add_spotify_columns_to_final_csv(song_df, predictions_df, drive_folder):
 # Call the function after predictions are ready
 if 'predictions_df' in locals() and not predictions_df.empty and not song_df.empty:
     add_spotify_columns_to_final_csv(song_df, predictions_df, drive_folder)
-
