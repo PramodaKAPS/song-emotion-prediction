@@ -1,8 +1,4 @@
-from IPython import get_ipython
-ipython = get_ipython()
-if ipython is None:
-    print("Kernel not found. Run in a Colab notebook cell.")
-    exit(1)
+
 # main.py: Main script to run the full pipeline
 
 from setup import setup_environment
