@@ -2,7 +2,7 @@ def create_mlp_regressor(input_dim):
     model = tf.keras.Sequential([
         tf.keras.layers.Dense(128, activation='relu', input_dim=input_dim),
         tf.keras.layers.Dense(64, activation='relu'),
-        tf.keras.layers.Dense(1)  # Regression output
+        tf.keras.layers.Dense(1)
     ])
     model.compile(optimizer='adam', loss='mse')
     return model
