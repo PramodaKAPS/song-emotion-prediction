@@ -1,18 +1,13 @@
 # main.py: Main script to run the full pipeline
 
-import warnings
-warnings.filterwarnings('ignore')  # Suppress warnings
-
 from setup import setup_environment
 from data_loader import download_csv  # Assuming data_loader.py has load_datasets function; adjust if needed
 from preprocess import preprocess_text, get_xanew_features, apply_pos_context
 from features import get_bert_embeddings
 from model import train_and_evaluate
 from utils import calculate_audio_scores, combine_predictions, assign_quadrant, create_thayer_plot, add_spotify_columns_to_final_csv
-import numpy as np
-import pandas as pd
-from transformers import AutoTokenizer  # Added missing import
-from google.colab import drive  # Added missing import for drive
+import numpy as pd
+from transformers import AutoTokenizer, AutoModel  # Added missing imports for DistilBERT
 
 def main():
     drive_folder = setup_environment()
@@ -49,6 +44,7 @@ def main():
         'Value': [arousal_mse, arousal_r2, valence_mse, valence_r2, f1]
     })
     metrics_df.to_csv(drive_folder + 'training_metrics.csv', index=False)
+    print("Training metrics saved to Google Drive.")
     
     # --- Prediction on Spotify songs ---
     # Audio features
@@ -107,6 +103,7 @@ def main():
     # Quadrant
     predictions_df['quadrant'] = predictions_df.apply(lambda row: assign_quadrant(row['arousal_final'], row['valence_final']), axis=1)
     predictions_df.to_csv(drive_folder + 'song_emotion_predictions_with_quadrant_taylor_francis.csv', index=False)
+    print("Predictions with quadrant labels saved to Google Drive: " + drive_folder + 'song_emotion_predictions_with_quadrant_taylor_francis.csv')
     
     # Merge and save final CSV with all Spotify columns
     add_spotify_columns_to_final_csv(song_df, predictions_df, drive_folder)
