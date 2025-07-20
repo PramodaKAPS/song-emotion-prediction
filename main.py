@@ -1,8 +1,11 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow warnings
+
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_squared_error
-from transformers import AutoTokenizer, AutoModel
+from sklearn.metrics import mean_squared_error, r2_score, f1_score
+from transformers import AutoTokenizer, AutoModel  # Ensure these are imported here
 import torch
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
@@ -14,15 +17,10 @@ from io import StringIO
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import pearsonr
-# from google.colab import drive  # Comment out or remove this import if not needed
-import os  # Added for directory creation
-import tensorflow as tf  # Added for neural network with epochs
-from sklearn.metrics import r2_score, f1_score  # Added for R² and F1
+import tensorflow as tf
+import os  # For directory creation
 
-# Mount Google Drive - REMOVE THIS LINE, handle mounting separately in Colab
-# drive.mount('/content/drive')
-
-# Download NLTK resources
+# Download NLTK resources (global, outside functions)
 nltk.download('punkt', quiet=True)
 nltk.download('punkt_tab', quiet=True)
 nltk.download('stopwords', quiet=True)
@@ -30,21 +28,18 @@ nltk.download('wordnet', quiet=True)
 nltk.download('averaged_perceptron_tagger', quiet=True)
 nltk.download('averaged_perceptron_tagger_eng', quiet=True)
 
-# Create Drive folder if it doesn't exist (moved earlier)
-drive_folder = '/content/drive/MyDrive/SongEmotionPredictions/'
-os.makedirs(drive_folder, exist_ok=True)
+# No drive.mount here—handle it in Colab cell
 
+def main():
+    # Create Drive folder if it doesn't exist
+    drive_folder = '/content/drive/MyDrive/SongEmotionPredictions/'
+    os.makedirs(drive_folder, exist_ok=True)
 
-# URLs
-XANEW_URL = 'https://raw.githubusercontent.com/JULIELab/XANEW/master/Ratings_Warriner_et_al.csv'
-EMOBANK_URL = 'https://raw.githubusercontent.com/PramodaKAPS/SongsEmotions/main/emobank.csv'
-SPOTIFY_URL = 'https://raw.githubusercontent.com/PramodaKAPS/SongsEmotions/main/spotify_songs.csv'
-
-# Load DistilBERT once
-tokenizer = AutoTokenizer.from_pretrained('distilbert-base-uncased')
-model = AutoModel.from_pretrained('distilbert-base-uncased')
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model.to(device)
+    # Load DistilBERT (now AutoTokenizer is imported globally)
+    tokenizer = AutoTokenizer.from_pretrained('distilbert-base-uncased')
+    model = AutoModel.from_pretrained('distilbert-base-uncased')
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
 
 # Download datasets with error handling
 def download_csv(url):
