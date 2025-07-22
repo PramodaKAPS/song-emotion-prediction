@@ -9,6 +9,9 @@ from preprocessor import preprocess_texts, get_xanew_features, apply_pos_context
 from model_trainer import train_and_evaluate_models
 from predictor import make_predictions, combine_predictions, validate_predictions
 from utils import assign_quadrant, create_thayer_plot, add_spotify_columns_to_final_csv
+import pandas as pd
+
+
 
 # Create new local folder for this run (full datasets)
 drive_folder = './SongEmotionPredictions_FullDatasets/'  # New folder
