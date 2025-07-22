@@ -17,14 +17,18 @@ def train_and_evaluate_models(sentence_embeddings, sentence_df, drive_folder):
 
         # Define simple MLP regressor model
         def create_mlp_regressor(input_dim):
-            model = tf.keras.Sequential([
-                tf.keras.layers.Input(shape=(input_dim,)),
-                tf.keras.layers.Dense(128, activation='relu'),
-                tf.keras.layers.Dense(64, activation='relu'),
-                tf.keras.layers.Dense(1)  # Regression output
-            ])
-            model.compile(optimizer='adam', loss='mse')
-            return model
+            try:
+                model = tf.keras.Sequential([
+                    tf.keras.layers.Input(shape=(input_dim,)),
+                    tf.keras.layers.Dense(128, activation='relu'),
+                    tf.keras.layers.Dense(64, activation='relu'),
+                    tf.keras.layers.Dense(1)  # Regression output
+                ])
+                model.compile(optimizer='adam', loss='mse')
+                return model
+            except Exception as e:
+                print(f"Model creation failed: {e}")
+                raise
 
         # Train arousal model
         input_dim = X_train.shape[1]
@@ -64,3 +68,4 @@ def train_and_evaluate_models(sentence_embeddings, sentence_df, drive_folder):
 
         return arousal_model, valence_model
     return None, None
+
