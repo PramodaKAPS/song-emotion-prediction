@@ -6,8 +6,8 @@ from scipy.stats import pearsonr
 def make_predictions(arousal_model, valence_model, lyrics_embeddings, song_df):
     if not song_df.empty and lyrics_embeddings.size > 0:
         X_text_lyrics = np.hstack([lyrics_embeddings, song_df[['xanew_arousal', 'xanew_valence']].values])
-        arousal_text = pd.Series(arousal_model.predict(X_text_lyrics, batch_size=16).flatten())
-        valence_text = pd.Series(valence_model.predict(X_text_lyrics, batch_size=16).flatten())
+        arousal_text = pd.Series(arousal_model.predict(X_text_lyrics, batch_size=32).flatten())
+        valence_text = pd.Series(valence_model.predict(X_text_lyrics, batch_size=32).flatten())
     else:
         arousal_text = pd.Series()
         valence_text = pd.Series()
