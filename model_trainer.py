@@ -30,12 +30,12 @@ def train_and_evaluate_models(sentence_embeddings, sentence_df, drive_folder):
 
         input_dim = X_train.shape[1]
         arousal_model = create_mlp_regressor(input_dim)
-        arousal_model.fit(X_train, y_arousal_train, epochs=5, batch_size=16, verbose=1, validation_split=0.2)
+        arousal_model.fit(X_train, y_arousal_train, epochs=5, batch_size=32, verbose=1, validation_split=0.2)
         valence_model = create_mlp_regressor(input_dim)
-        valence_model.fit(X_train, y_valence_train, epochs=5, batch_size=16, verbose=1, validation_split=0.2)
+        valence_model.fit(X_train, y_valence_train, epochs=5, batch_size=32, verbose=1, validation_split=0.2)
 
-        y_arousal_pred = arousal_model.predict(X_test, batch_size=16).flatten()
-        y_valence_pred = valence_model.predict(X_test, batch_size=16).flatten()
+        y_arousal_pred = arousal_model.predict(X_test, batch_size=32).flatten()
+        y_valence_pred = valence_model.predict(X_test, batch_size=32).flatten()
 
         arousal_mse = mean_squared_error(y_arousal_test, y_arousal_pred)
         arousal_r2 = r2_score(y_arousal_test, y_arousal_pred)
@@ -58,5 +58,3 @@ def train_and_evaluate_models(sentence_embeddings, sentence_df, drive_folder):
 
         return arousal_model, valence_model
     return None, None
-
-
