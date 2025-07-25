@@ -6,7 +6,6 @@ from nltk.stem import WordNetLemmatizer
 from transformers import AutoTokenizer, AutoModel
 import torch
 
-# Load DistilBERT once (global for modularity)
 tokenizer = AutoTokenizer.from_pretrained('distilbert-base-uncased')
 model = AutoModel.from_pretrained('distilbert-base-uncased')
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -26,7 +25,7 @@ def get_xanew_features(tokens, xanew_df, is_lyric=False):
     arousal_scores = []
     valence_scores = []
     weights = []
-    for token in set(tokens):  # Use set to avoid redundancy
+    for token in set(tokens):
         if token in xanew_df['word'].values:
             row = xanew_df[xanew_df['word'] == token]
             count = tokens.count(token)
@@ -47,16 +46,13 @@ def apply_pos_context(tokens, arousal, valence):
     negation_count = sum(1 for word, _ in tagged if word in negation_words)
     verb_neg_count = sum(1 for word, tag in tagged if tag.startswith('VB') and word in ['kill', 'destroy'])
 
-    # Apply adjustments once
     arousal *= (1.2 ** (adj_count / max(len(tokens), 1))) * (1.1 ** (adv_count / max(len(tokens), 1)))
     valence *= (1.2 ** (adj_count / max(len(tokens), 1))) * (1.1 ** (adv_count / max(len(tokens), 1)))
     valence *= (0.8 ** verb_neg_count)
 
-    # Flip valence if odd negations
     if negation_count % 2 == 1:
         valence = 1.0 - valence
 
-    # Clamp to [0, 1]
     arousal = min(max(arousal, 0.0), 1.0)
     valence = min(max(valence, 0.0), 1.0)
     return arousal, valence
@@ -70,7 +66,7 @@ def get_bert_embeddings(texts, max_length=512):
         tokens = tokenizer.tokenize(text)
         if len(tokens) > max_length - 2:
             print(f"Warning: Truncating long text (original tokens: {len(tokens)})")
-            tokens = tokens[:max_length - 2]  # Explicit truncation
+            tokens = tokens[:max_length - 2]
         chunks = [tokens[i:i + (max_length - 2)] for i in range(0, len(tokens), max_length - 2)]
         sentence_embeddings = []
         for chunk in chunks:
