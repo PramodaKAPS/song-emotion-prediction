@@ -1,7 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.metrics import f1_score, accuracy_score  # Not used here but imported for completeness
 
 def assign_quadrant(arousal, valence):
     if arousal >= 0 and valence >= 0:
@@ -45,11 +44,9 @@ def add_spotify_columns_to_final_csv(song_df, predictions_df, drive_folder):
         print("No data to merge.")
         return
 
-    # Merge predictions into the original song_df (adds all Spotify columns + predictions)
-    final_df = song_df.copy()  # Copy original Spotify DataFrame
+    final_df = song_df.copy()
     final_df = final_df.join(predictions_df.set_index(['track_id', 'track_name', 'track_artist']), on=['track_id', 'track_name', 'track_artist'])
 
-    # Save the final enriched DataFrame
     final_output_file = drive_folder + 'spotify_full_with_predictions.csv'
     final_df.to_csv(final_output_file, index=False)
     print(f"Final output CSV with all Spotify columns and predictions saved locally: {final_output_file}")
