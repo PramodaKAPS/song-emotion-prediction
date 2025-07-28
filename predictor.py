@@ -14,8 +14,8 @@ def make_predictions(arousal_model, valence_model, lyrics_embeddings, song_df):
     return arousal_text, valence_text
 
 def combine_predictions(arousal_text, valence_text, arousal_audio, valence_audio):
-    w_text = 0.6
-    w_audio = 0.4
+    w_text = 0.46
+    w_audio = 0.54
     arousal_final = w_text * arousal_text + w_audio * arousal_audio if not arousal_text.empty else arousal_audio
     valence_final = w_text * valence_text + w_audio * valence_audio if not valence_text.empty else valence_audio
 
